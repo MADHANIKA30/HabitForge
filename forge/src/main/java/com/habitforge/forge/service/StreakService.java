@@ -1,0 +1,12 @@
+package com.habitforge.forge.service;
+import com.habitforge.forge.entity.*; import com.habitforge.forge.repository.*; import org.springframework.stereotype.Service; import org.springframework.transaction.annotation.Transactional; import java.time.*; import java.util.*;
+@Service public class StreakService {
+ private final StreakRepository streakRepository; private final CompletionLogRepository completionRepository; private final NotificationService notificationService;
+ public StreakService(StreakRepository s,CompletionLogRepository c,NotificationService n){streakRepository=s;completionRepository=c;notificationService=n;}
+ @Transactional public Streak refresh(Habit habit){List<CompletionLog> logs=completionRepository.findByHabitIdOrderByCompletedDateAsc(habit.getId());Streak s=streakRepository.findByHabitId(habit.getId()).orElseGet(()->{Streak x=new Streak();x.setHabit(habit);return x;});int old=s.getCurrentStreak();int best=calculateBest(logs,habit.getFrequency());int current=calculateCurrent(logs,habit.getFrequency(),LocalDate.now());s.setCurrentStreak(current);s.setBestStreak(Math.max(s.getBestStreak(),best));if(!logs.isEmpty())s.setLastCompletedDate(logs.get(logs.size()-1).getCompletedDate());Streak saved=streakRepository.save(s);if(old!=current)notificationService.streakChanged(habit,old,current,saved.getBestStreak());return saved;}
+ public int calculateBest(List<CompletionLog> logs,Frequency f){if(logs.isEmpty())return 0;List<LocalDate>d=dates(logs);int best=1,run=1;for(int i=1;i<d.size();i++){boolean c=f==Frequency.DAILY?d.get(i).equals(d.get(i-1).plusDays(1)):nextWeek(d.get(i-1),d.get(i));if(c)run++;else run=1;best=Math.max(best,run);}return best;}
+ public int calculateCurrent(List<CompletionLog> logs,Frequency f,LocalDate today){if(logs.isEmpty())return 0;List<LocalDate>d=dates(logs);LocalDate last=d.get(d.size()-1);if(f==Frequency.DAILY){if(last.isBefore(today.minusDays(1)))return 0;}else{if(weekStart(last).isBefore(weekStart(today).minusWeeks(1)))return 0;}int run=1;for(int i=d.size()-1;i>0;i--){if(f==Frequency.DAILY){if(d.get(i-1).equals(d.get(i).minusDays(1)))run++;else break;}else{if(nextWeek(d.get(i-1),d.get(i)))run++;else break;}}return run;}
+ private List<LocalDate> dates(List<CompletionLog> logs){return logs.stream().map(CompletionLog::getCompletedDate).distinct().sorted().toList();}
+ private boolean nextWeek(LocalDate a,LocalDate b){return weekStart(b).equals(weekStart(a).plusWeeks(1));}
+ private LocalDate weekStart(LocalDate d){return d.with(DayOfWeek.MONDAY);}
+}

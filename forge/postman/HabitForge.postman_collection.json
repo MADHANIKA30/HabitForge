@@ -1,0 +1,111 @@
+{
+  "info": {
+    "name": "HabitForge API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080"
+    },
+    {
+      "key": "habitId",
+      "value": "1"
+    }
+  ],
+  "item": [
+    {
+      "name": "Create Habit",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Read 20 Pages\",\n  \"description\": \"Read daily\",\n  \"frequency\": \"DAILY\",\n  \"remindersEnabled\": true,\n  \"reminderTime\": \"20:00\"\n}"
+        },
+        "url": "{{baseUrl}}/api/habits"
+      }
+    },
+    {
+      "name": "List Habits",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/api/habits?page=0&size=10&sort=createdAt,desc"
+      }
+    },
+    {
+      "name": "Get Habit",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/api/habits/{{habitId}}"
+      }
+    },
+    {
+      "name": "Update Habit",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Read 30 Pages\",\n  \"description\": \"Updated goal\",\n  \"frequency\": \"DAILY\",\n  \"remindersEnabled\": true,\n  \"reminderTime\": \"21:00\"\n}"
+        },
+        "url": "{{baseUrl}}/api/habits/{{habitId}}"
+      }
+    },
+    {
+      "name": "Check In",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"completedDate\": \"2026-09-28\",\n  \"note\": \"Completed today\"\n}"
+        },
+        "url": "{{baseUrl}}/api/habits/{{habitId}}/check-ins"
+      }
+    },
+    {
+      "name": "Logs",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/api/habits/{{habitId}}/logs"
+      }
+    },
+    {
+      "name": "Streak",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/api/habits/{{habitId}}/streak"
+      }
+    },
+    {
+      "name": "Calendar",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/api/habits/{{habitId}}/calendar?year=2026&month=9"
+      }
+    },
+    {
+      "name": "Delete Habit",
+      "request": {
+        "method": "DELETE",
+        "url": "{{baseUrl}}/api/habits/{{habitId}}"
+      }
+    }
+  ]
+}

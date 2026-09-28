@@ -1,0 +1,3 @@
+package com.habitforge.forge.service;
+import com.habitforge.forge.entity.Habit; import org.slf4j.*; import org.springframework.stereotype.Service;
+@Service public class NotificationService { private static final Logger log=LoggerFactory.getLogger(NotificationService.class); public void streakChanged(Habit h,int oldCurrent,int newCurrent,int best){ if(newCurrent>oldCurrent) log.info("[REMINDER] Habit '{}' streak increased: {} -> {} (best={})",h.getName(),oldCurrent,newCurrent,best); else if(oldCurrent>0&&newCurrent==0) log.info("[REMINDER] Habit '{}' streak reset after a missed period",h.getName()); } }
