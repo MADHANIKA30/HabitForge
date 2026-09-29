@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HabitForge Dashboard</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">HF</div>
+        <div><strong>HabitForge</strong><span>Streak Tracker</span></div>
+      </div>
+      <nav>
+        <button class="nav-item active" data-section="dashboard">▦ <span>Dashboard</span></button>
+        <button class="nav-item" data-section="habits">✓ <span>My Habits</span></button>
+      </nav>
+      <div class="sidebar-footer">Spring Boot · H2 · REST API</div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">PERSONAL HABIT TRACKER</p>
+          <h1>Good morning 👋</h1>
+          <p class="subtext" id="todayLabel"></p>
+        </div>
+        <button class="primary" id="addHabitBtn">+ Add Habit</button>
+      </header>
+
+      <section class="stats-grid" id="stats">
+        <article class="stat-card"><span>Active habits</span><strong id="activeCount">0</strong><small>Currently tracked</small></article>
+        <article class="stat-card"><span>Completed today</span><strong id="completedToday">0</strong><small>Keep the streak going</small></article>
+        <article class="stat-card"><span>Current streak</span><strong id="currentStreak">0</strong><small>Across your habits</small></article>
+        <article class="stat-card"><span>Best streak</span><strong id="bestStreak">0</strong><small>Personal record</small></article>
+      </section>
+
+      <section class="content-grid">
+        <div class="panel habits-panel">
+          <div class="panel-head">
+            <div><h2>Today's habits</h2><p>Mark a habit complete when you finish it.</p></div>
+            <button class="ghost" id="refreshBtn">↻ Refresh</button>
+          </div>
+          <div id="habitList" class="habit-list"></div>
+        </div>
+
+        <div class="panel calendar-panel">
+          <div class="panel-head calendar-head">
+            <div><h2>Monthly progress</h2><p id="calendarTitle">Select a habit</p></div>
+            <div class="month-controls"><button class="icon-btn" id="prevMonth">‹</button><button class="icon-btn" id="nextMonth">›</button></div>
+          </div>
+          <div id="calendar" class="calendar"></div>
+        </div>
+      </section>
+
+      <section class="panel activity-panel">
+        <div class="panel-head"><div><h2>Recent activity</h2><p>Completion history for the selected habit.</p></div><select id="habitSelector"></select></div>
+        <div id="logs" class="logs"></div>
+      </section>
+    </main>
+  </div>
+
+  <div class="modal-backdrop hidden" id="habitModal">
+    <div class="modal">
+      <div class="modal-head"><div><h2 id="modalTitle">Add habit</h2><p>Create or update a habit.</p></div><button class="icon-btn" id="closeModal">×</button></div>
+      <form id="habitForm">
+        <input type="hidden" id="habitId" />
+        <label>Name<input id="name" maxlength="120" required placeholder="e.g. Read 20 pages" /></label>
+        <label>Description<textarea id="description" maxlength="500" placeholder="What does this habit involve?"></textarea></label>
+        <label>Frequency<select id="frequency"><option value="DAILY">Daily</option><option value="WEEKLY">Weekly</option></select></label>
+        <label class="check-row"><input type="checkbox" id="remindersEnabled" /> Enable reminder</label>
+        <label id="reminderTimeWrap" class="hidden">Reminder time<input id="reminderTime" maxlength="80" placeholder="08:00" /></label>
+        <div class="modal-actions"><button type="button" class="ghost" id="cancelModal">Cancel</button><button type="submit" class="primary">Save Habit</button></div>
+      </form>
+    </div>
+  </div>
+
+  <div class="toast hidden" id="toast"></div>
+  <script src="/app.js"></script>
+</body>
+</html>
