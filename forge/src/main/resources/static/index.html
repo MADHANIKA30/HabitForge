@@ -1,83 +1,101 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>HabitForge Dashboard</title>
-  <link rel="stylesheet" href="/style.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <meta name="theme-color" content="#0b0d13">
+  <title>HabitForge — Forge Your Consistency</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="app-shell">
-    <aside class="sidebar">
-      <div class="brand">
-        <div class="brand-mark">HF</div>
-        <div><strong>HabitForge</strong><span>Streak Tracker</span></div>
-      </div>
-      <nav>
-        <button class="nav-item active" data-section="dashboard">▦ <span>Dashboard</span></button>
-        <button class="nav-item" data-section="habits">✓ <span>My Habits</span></button>
-      </nav>
-      <div class="sidebar-footer">Spring Boot · H2 · REST API</div>
-    </aside>
+<div id="toast" class="toast hidden"></div>
 
-    <main class="main">
-      <header class="topbar">
-        <div>
-          <p class="eyebrow">PERSONAL HABIT TRACKER</p>
-          <h1>Good morning 👋</h1>
-          <p class="subtext" id="todayLabel"></p>
-        </div>
-        <button class="primary" id="addHabitBtn">+ Add Habit</button>
-      </header>
-
-      <section class="stats-grid" id="stats">
-        <article class="stat-card"><span>Active habits</span><strong id="activeCount">0</strong><small>Currently tracked</small></article>
-        <article class="stat-card"><span>Completed today</span><strong id="completedToday">0</strong><small>Keep the streak going</small></article>
-        <article class="stat-card"><span>Current streak</span><strong id="currentStreak">0</strong><small>Across your habits</small></article>
-        <article class="stat-card"><span>Best streak</span><strong id="bestStreak">0</strong><small>Personal record</small></article>
-      </section>
-
-      <section class="content-grid">
-        <div class="panel habits-panel">
-          <div class="panel-head">
-            <div><h2>Today's habits</h2><p>Mark a habit complete when you finish it.</p></div>
-            <button class="ghost" id="refreshBtn">↻ Refresh</button>
-          </div>
-          <div id="habitList" class="habit-list"></div>
-        </div>
-
-        <div class="panel calendar-panel">
-          <div class="panel-head calendar-head">
-            <div><h2>Monthly progress</h2><p id="calendarTitle">Select a habit</p></div>
-            <div class="month-controls"><button class="icon-btn" id="prevMonth">‹</button><button class="icon-btn" id="nextMonth">›</button></div>
-          </div>
-          <div id="calendar" class="calendar"></div>
-        </div>
-      </section>
-
-      <section class="panel activity-panel">
-        <div class="panel-head"><div><h2>Recent activity</h2><p>Completion history for the selected habit.</p></div><select id="habitSelector"></select></div>
-        <div id="logs" class="logs"></div>
-      </section>
-    </main>
-  </div>
-
-  <div class="modal-backdrop hidden" id="habitModal">
-    <div class="modal">
-      <div class="modal-head"><div><h2 id="modalTitle">Add habit</h2><p>Create or update a habit.</p></div><button class="icon-btn" id="closeModal">×</button></div>
-      <form id="habitForm">
-        <input type="hidden" id="habitId" />
-        <label>Name<input id="name" maxlength="120" required placeholder="e.g. Read 20 pages" /></label>
-        <label>Description<textarea id="description" maxlength="500" placeholder="What does this habit involve?"></textarea></label>
-        <label>Frequency<select id="frequency"><option value="DAILY">Daily</option><option value="WEEKLY">Weekly</option></select></label>
-        <label class="check-row"><input type="checkbox" id="remindersEnabled" /> Enable reminder</label>
-        <label id="reminderTimeWrap" class="hidden">Reminder time<input id="reminderTime" maxlength="80" placeholder="08:00" /></label>
-        <div class="modal-actions"><button type="button" class="ghost" id="cancelModal">Cancel</button><button type="submit" class="primary">Save Habit</button></div>
-      </form>
+<!-- AUTH -->
+<section id="authPage" class="auth-page">
+  <div class="auth-orb orb-a"></div><div class="auth-orb orb-b"></div>
+  <div class="auth-card">
+    <div class="auth-brand"><div class="forge-logo">🔥</div><div><b>Habit<span>Forge</span></b><small>Forge consistency. Build yourself.</small></div></div>
+    <div id="loginBox">
+      <div class="auth-copy"><p class="eyebrow">WELCOME BACK</p><h1>Enter your forge.</h1><p>Turn tiny actions into unbreakable streaks.</p></div>
+      <form id="loginForm" class="auth-form"><label>Username<input id="loginUser" required placeholder="Your username"></label><label>Password<input id="loginPass" type="password" required placeholder="Your password"></label><div id="loginError" class="form-error hidden"></div><button class="forge-btn wide">🔥 Enter HabitForge</button></form>
+      <p class="switch">New here? <a onclick="showRegister()">Create an account</a></p>
+    </div>
+    <div id="registerBox" class="hidden">
+      <div class="auth-copy"><p class="eyebrow">START YOUR JOURNEY</p><h1>Build your forge.</h1><p>Your progress is made one completed habit at a time.</p></div>
+      <form id="registerForm" class="auth-form"><label>Username<input id="regUser" required placeholder="Choose a username"></label><label>Email<input id="regEmail" type="email" required placeholder="you@example.com"></label><label>Password<input id="regPass" type="password" required minlength="4" placeholder="Create a password"></label><button class="forge-btn wide">⚒ Create My Forge</button></form>
+      <p class="switch">Already have an account? <a onclick="showLogin()">Login</a></p>
     </div>
   </div>
+</section>
 
-  <div class="toast hidden" id="toast"></div>
-  <script src="/app.js"></script>
+<!-- APP -->
+<section id="appPage" class="app hidden">
+  <aside class="sidebar" id="sidebar">
+    <div class="brand"><div class="brand-mark">🔥</div><div><strong>HabitForge</strong><span>Build your best self</span></div></div>
+    <div class="side-label">WORKSPACE</div>
+    <button class="nav-item active" data-section="dashboard" onclick="showSection('dashboard',this)"><i>⌂</i><span>Dashboard</span></button>
+    <button class="nav-item" data-section="habits" onclick="showSection('habits',this)"><i>⚔</i><span>My Quests</span></button>
+    <button class="nav-item" data-section="analytics" onclick="showSection('analytics',this)"><i>◈</i><span>Forge Insights</span></button>
+    <button class="nav-item" data-section="calendarSection" onclick="showSection('calendarSection',this)"><i>▦</i><span>Forge Calendar</span></button>
+    <button class="nav-item" data-section="achievements" onclick="showSection('achievements',this)"><i>♛</i><span>Achievements</span></button>
+    <div class="side-label">TOOLS</div>
+    <button class="nav-item" onclick="openFocusMode()"><i>◉</i><span>Focus Mode</span></button>
+    <button class="nav-item" onclick="openHabitModal()"><i>＋</i><span>Forge Habit</span></button>
+    <div class="sidebar-bottom"><div class="mini-profile"><div class="avatar" id="avatar">U</div><div><b id="displayUser">User</b><small id="levelLabel">Level 1 • Ember</small></div></div><button class="logout" onclick="logout()">↪ Logout</button></div>
+  </aside>
+
+  <main class="main">
+    <header class="mobile-top"><button class="menu-btn" onclick="toggleSidebar()">☰</button><div class="mobile-brand">🔥 HabitForge</div><button class="avatar small-avatar" id="mobileAvatar">U</button></header>
+
+    <!-- DASHBOARD -->
+    <section id="dashboard" class="page-section">
+      <div class="hero-row">
+        <div><p class="eyebrow">TODAY • <span id="todayLabel"></span></p><h1>Good day, <span id="welcomeUser">there</span> 👋</h1><p class="hero-sub">Every check-in is another strike of the hammer. Keep forging.</p></div>
+        <div class="hero-actions"><button class="ghost-btn" onclick="openFocusMode()">◉ Focus</button><button class="forge-btn" onclick="openHabitModal()">＋ Forge Habit</button></div>
+      </div>
+
+      <div class="level-banner">
+        <div class="level-flame">🔥</div><div class="level-copy"><div class="level-top"><b id="levelName">Ember</b><span id="xpText">0 / 100 XP</span></div><div class="xp-track"><span id="xpBar"></span></div><small id="nextLevelText">100 XP to next level</small></div><div class="level-number">LV <strong id="levelNumber">1</strong></div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card accent"><div class="stat-icon">⚔</div><small>Active Quests</small><strong id="totalHabits">0</strong><span>habits in your forge</span></div>
+        <div class="stat-card"><div class="stat-icon">✓</div><small>Today's Progress</small><strong><span id="completedToday">0</span><em id="progressPercent">0%</em></strong><span id="progressCaption">Start your first quest</span></div>
+        <div class="stat-card"><div class="stat-icon">🔥</div><small>Current Streak</small><strong id="currentStreak">0</strong><span>days on fire</span></div>
+        <div class="stat-card"><div class="stat-icon">♛</div><small>Best Streak</small><strong id="bestStreak">0</strong><span>personal record</span></div>
+      </div>
+
+      <div class="dashboard-grid">
+        <div class="panel quests-panel"><div class="panel-head"><div><p class="eyebrow">DAILY QUESTS</p><h2>Today's Forge</h2><p>Complete your quests to earn XP.</p></div><button class="text-btn" onclick="showSection('habits',document.querySelector('[data-section=habits]'))">View all →</button></div><div id="dashboardHabits" class="quest-list"></div></div>
+        <div class="panel focus-card"><div class="focus-glow"></div><p class="eyebrow">TODAY'S FOCUS</p><div class="focus-icon">◉</div><h2>Forge a little more.</h2><p>Use Focus Mode to work without distractions and turn time into progress.</p><button class="forge-btn wide" onclick="openFocusMode()">Start Focus Session</button></div>
+      </div>
+
+      <div class="dashboard-grid bottom-grid">
+        <div class="panel"><div class="panel-head"><div><p class="eyebrow">FORGE CALENDAR</p><h2>Consistency Heatmap</h2></div><button class="text-btn" onclick="showSection('calendarSection',document.querySelector('[data-section=calendarSection]'))">Open →</button></div><div id="heatmap" class="heatmap"></div><div class="heatmap-legend"><span>Less</span><i></i><i></i><i></i><i></i><span>More</span></div></div>
+        <div class="panel garden-panel"><div class="panel-head"><div><p class="eyebrow">YOUR FORGE GARDEN</p><h2>Growth</h2></div></div><div id="garden" class="garden"></div><p id="gardenText" class="garden-text">Plant your first seed by completing a habit.</p></div>
+      </div>
+    </section>
+
+    <!-- HABITS -->
+    <section id="habits" class="page-section hidden"><div class="section-heading"><div><p class="eyebrow">YOUR QUEST BOARD</p><h1>My Habits</h1><p>Every habit is a quest. Every completion is XP.</p></div><div class="heading-actions"><select id="sortSelect" onchange="loadHabits(0)"><option value="createdAt,desc">Newest</option><option value="createdAt,asc">Oldest</option><option value="name,asc">Name A–Z</option><option value="name,desc">Name Z–A</option></select><button class="forge-btn" onclick="openHabitModal()">＋ New Quest</button></div></div><div id="allHabits" class="all-habits"></div><div class="pagination"><button onclick="changePage(-1)">←</button><span id="pageInfo">Page 1</span><button onclick="changePage(1)">→</button></div></section>
+
+    <!-- ANALYTICS -->
+    <section id="analytics" class="page-section hidden"><div class="section-heading"><div><p class="eyebrow">FORGE INTELLIGENCE</p><h1>Your Insights</h1><p>See how your consistency is taking shape.</p></div></div><div class="insight-grid"><div class="panel insight-card"><span class="big-insight">🔥</span><small>Longest streak</small><strong id="insightBest">0 days</strong><p>Your personal consistency record.</p></div><div class="panel insight-card"><span class="big-insight">✓</span><small>Total completions</small><strong id="insightCompletions">0</strong><p>Every completed quest counts.</p></div><div class="panel insight-card"><span class="big-insight">⚡</span><small>Completion rate</small><strong id="insightRate">0%</strong><p>Based on your tracked activity.</p></div><div class="panel insight-card"><span class="big-insight">🌱</span><small>Forge growth</small><strong id="insightGrowth">Seedling</strong><p id="insightGrowthText">Keep checking in.</p></div></div><div class="analytics-grid"><div class="panel"><div class="panel-head"><div><p class="eyebrow">HABIT BREAKDOWN</p><h2>Consistency by Quest</h2></div></div><div id="habitBars" class="habit-bars"></div></div><div class="panel"><div class="panel-head"><div><p class="eyebrow">RECENT ACTIVITY</p><h2>Forge Log</h2></div></div><div id="activityLog" class="activity-log"></div></div></div></section>
+
+    <!-- CALENDAR -->
+    <section id="calendarSection" class="page-section hidden"><div class="section-heading"><div><p class="eyebrow">HISTORY</p><h1>Forge Calendar</h1><p>Review the days you showed up.</p></div><select id="calendarHabit" onchange="renderFullCalendar()"></select></div><div class="panel calendar-panel"><div class="calendar-head"><button class="circle-btn" onclick="changeMonth(-1)">←</button><h2 id="calendarTitle"></h2><button class="circle-btn" onclick="changeMonth(1)">→</button></div><div id="fullCalendar"></div></div></section>
+
+    <!-- ACHIEVEMENTS -->
+    <section id="achievements" class="page-section hidden"><div class="section-heading"><div><p class="eyebrow">MILESTONES</p><h1>Achievements</h1><p>Small wins become your forge legend.</p></div></div><div id="achievementGrid" class="achievement-grid"></div></section>
+  </main>
+</section>
+
+<!-- HABIT MODAL -->
+<div id="habitModal" class="modal-backdrop hidden" onclick="if(event.target===this)closeHabitModal()"><div class="modal-box"><div class="modal-head"><div><p class="eyebrow">FORGE A QUEST</p><h2 id="modalTitle">Create Habit</h2></div><button class="close-btn" onclick="closeHabitModal()">×</button></div><form id="habitForm"><input type="hidden" id="habitId"><label>Habit name<input id="habitName" required maxlength="80" placeholder="e.g. Read 20 pages"></label><label>Description<textarea id="habitDescription" rows="3" maxlength="240" placeholder="What do you want to accomplish?"></textarea></label><div class="form-two"><label>Frequency<select id="habitFrequency"><option value="DAILY">Daily</option><option value="WEEKDAYS">Weekdays</option><option value="WEEKLY">Weekly</option></select></label><label>Reminder time<input id="reminderTime" type="time"></label></div><label class="toggle-row"><input type="checkbox" id="remindersEnabled"><span class="toggle"></span><span>Enable reminder</span></label><div class="modal-actions"><button type="button" class="ghost-btn" onclick="closeHabitModal()">Cancel</button><button class="forge-btn">🔥 Save Quest</button></div></form></div></div>
+
+<!-- FOCUS MODAL -->
+<div id="focusModal" class="focus-modal hidden"><div class="focus-backdrop"></div><div class="focus-box"><button class="focus-close" onclick="closeFocusMode()">×</button><p class="eyebrow">FOCUS MODE</p><div class="focus-timer" id="focusTimer">25:00</div><div class="focus-session-icon">⚒</div><h2>Stay in the forge.</h2><p>One focused session can move the whole day forward.</p><div class="focus-controls"><button class="forge-btn" id="focusStartBtn" onclick="toggleFocusTimer()">▶ Start</button><button class="ghost-btn" onclick="resetFocusTimer()">↻ Reset</button></div></div></div>
+
+<script src="app.js"></script>
 </body>
 </html>
